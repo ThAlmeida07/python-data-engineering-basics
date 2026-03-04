@@ -1,0 +1,171 @@
+import pandas as pd 
+#criar dataFrame
+
+dados = {
+    'Produto': ['Sensor A', 'Sensor B', 'Placa X', 'Placa Y', 'Motor A', 'Motor B'],
+    'Categoria': ['Eletronica', 'Eletronica', 'Placas', 'Placas', 'Motores', 'Motores'],
+    'Valor': [300, 500, 1200, 800, 1500, 1700]
+}
+df = pd.DataFrame(dados)
+
+print('DataFrame')
+print(df)
+
+#exercicio 1 - Total vendido por categoria 
+
+print("\nTotal vendido por categoria")
+print(df.groupby('Categoria')['Valor'].sum())
+
+#exercicio 2 
+print("\nMédia ")
+print(df.groupby('Categoria')['Valor'].mean())
+
+#exercicio 3 
+print('\nProduto mais caro')
+prod_max = df.groupby('Categoria')['Valor'].idxmax()
+print(df.loc[prod_max])
+
+
+print('\nproduto mais barato')
+prod_min = df.groupby('Categoria')['Valor'].idxmin()
+print(df.loc[prod_min])
+
+#exercicio 4 
+print('\n')
+resultado = df.groupby('Categoria').aggregate({
+    'Valor':['sum', 'mean', 'max']
+})
+print(resultado)
+
+#exercicio - Fazer a diferença entre o mais car e o mais barato 
+
+#difrença entre maximo e minimo, fazer dessa forma 
+dif = df.groupby('Categoria').agg(
+    diferença = ('Valor', lambda x: x.max() - x.min()) 
+)
+print('\n', dif)
+#difrença linha a linha é usado .diff()
+print('\n', df.groupby('Categoria')['Valor'].diff())
+
+#utilizar .transform() com groupby
+
+#================================================================================================================================================
+#transform() no pandas é usado para aplicar funções a colunas ou grupos de dados,
+# retornando um objeto do mesmo tamanho que o original (diferente de .apply(), que pode reduzir o tamanho).
+#Ele é muito útil quando você quer criar novas colunas baseadas em cálculos feitos por grupo, preservando o alinhamento com o DataFrame original.
+#=================================================================================================================================================
+
+df['Percentual dentro da categoria'] = df['Valor'] / df.groupby('Categoria')['Valor'].transform('sum') * 100
+
+df['Percentual dentro da categoria'] = df['Percentual dentro da categoria'].round(2) #arredondar para casa decimal 
+
+print(df)
+
+#agg() = retorna o resultado esperado de forma reduzida 
+#transform() - retorna o resultado do mesmo tamanho do DataFrame 
+
+
+
+
+
+#===============================================================
+#MERGE - pd.merge() -  mesclear duas tabelas 
+#pd.merge(df1, df2, on='coluna_em_comum', how='tipo_de_join') - Como usar 
+
+#tipo de join :
+# inner- Só traz o que existe nas duas tabelas:
+#left - Traz tudo da esquerda + o que combinar da direita.
+#right - Traz tudo da direita + o que combinar da esquerda.
+#outer - Traz tudo de ambas, mesmo sem correspondência.
+#==============================================================
+
+df_produtos = pd.DataFrame({
+    'ID': [1, 2, 3], #Identificador 
+    'Produto': ['Sensor A', 'Motor A', 'Placa X'],
+    'Preço': [300, 1500, 1200]
+})
+
+df_vendas = pd.DataFrame({
+    'ID': [1, 2, 4], 
+    'Quantidade': [3, 2, 5]
+})
+
+df = pd.merge(df_produtos, df_vendas, on='ID', how='inner')
+
+print('\n', df_produtos)
+print('\n', df_vendas)
+
+#dataframe mesclado 
+#Placa X foi removido, pois o ID dele não está no segundo dataframe 
+print('\n', df)
+
+df_2 = pd.merge(df_produtos, df_vendas, on='ID', how='left')
+
+#Placa X aparece NaN , pois no dataframe de vendas não existe o ID do produto 
+print('\n', df_2)
+
+#Criar uma nova coluna - Faturamento  = preco * quantidade
+Faturamento = df['Preço'] * df['Quantidade']
+df['Faturamento'] = Faturamento
+
+print('\n', df)
+
+print('\n', df.groupby('Produto')['Faturamento'].sum())
+
+#==============================================
+#FILLNA - usado para preencher valores ausentes 
+#==============================================
+
+df_2['Quantidade'] =df_2['Quantidade'].fillna(0)
+
+df_2['Faturamento'] = df_2['Preço'] * df_2['Quantidade']
+
+print('\n', df_2)
+Faturamento_final = df_2.groupby('Produto')['Faturamento'].sum()
+print('\n', Faturamento_final)
+
+
+#merge com multiplas chaves
+
+df_preco = pd.DataFrame({
+    'Produtos': ['Sensor A', 'Sensor A', 'Motor A', 'Motor A'],
+    'Ano': [2024, 2025, 2024, 2025],
+    'Preço': [300, 350, 1500, 1700]
+})
+
+df_quantidade = pd.DataFrame({
+    'Produtos': ['Sensor A', 'Sensor A', 'Motor A', 'Motor A'],
+    'Ano': [2024, 2025, 2024, 2025],
+    'Quantidade': [10, 5, 2, 3]
+})
+
+df_simulacao1 = pd.merge(df_preco, df_quantidade, on=['Produtos', 'Ano'],how='left')
+
+print('\n ', df_simulacao1)
+
+df_simulacao1['Faturamento'] = df_simulacao1['Preço'] * df_simulacao1['Quantidade']
+
+print('\nDataFrame atualizado')
+print(df_simulacao1)
+#faturamento por produto
+faturamento_produto = df_simulacao1.groupby('Produtos')['Faturamento'].sum()
+print('\nfaturamento total por produto ')
+print('\n',faturamento_produto)
+
+faturamento_ano = df_simulacao1.groupby('Ano')['Faturamento'].sum()
+print('\nfaturamento total por ano')
+print('\n',faturamento_ano)
+
+print('\nFaturamneto total')
+print(df_simulacao1['Faturamento'].sum())
+
+
+#==========================================================================================
+#.T (transposição simples) - Se você quer simplesmente trocar linhas por colunas
+
+# Transformar linhas em colunas
+#df_pivot = df.pivot(index='Data', columns='Produto', values='Vendas')
+
+#Com agg
+#df_pivot = df.pivot_table(index='Data', columns='Produto', values='Vendas', aggfunc='sum')
+#===========================================================================================

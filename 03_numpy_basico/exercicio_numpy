@@ -1,0 +1,62 @@
+# ========================================
+# Exercícios - Numpy basico 
+# Autor: Thiago Almeida Souza
+# ========================================
+# ========================================   
+"""
+Objetivo:
+Praticar uso da biblioteca NumPy para:
+- Transformar lista em array
+- Operações vetorizadas
+- mean() e std()
+- Estatísticas básicas
+"""
+#========================================   
+
+# ========================================
+# EXERCÍCIO 1 - Lista -> Array NumPy 
+import numpy as np
+precos_lista = [1200, 350, 500, 2200, 150]
+
+# Convertendo lista para array NumPy
+precos = np.array(precos_lista)
+
+print("Array original:")
+print(precos)
+
+print("\nAplicando 10% de desconto (operação vetorizada)")
+precos_com_desconto = precos * 0.9
+print(precos_com_desconto)
+
+#media - mean()
+media = precos_com_desconto.mean()
+print("\nMédia dos preços com desconto:")
+print(f"{media:.2f}")
+
+# Desvio padrão - std()
+desvio = precos_com_desconto.std()
+print("\nDesvio padrão:")
+print(f"{desvio:.2f}")
+
+print("=" * 50)
+
+# ========================================
+# EXERCÍCIO 2 - Estatísticas de vendas
+vendas = np.array([10, 15, 8, 20, 25, 30, 12])
+
+print("\nVendas diárias:")
+print(vendas)
+
+print("\nTotal semanal:")
+print(vendas.sum())  
+
+print("\nMédia das vendas:")
+print(f"{vendas.mean():.2f}")
+
+print("\nMaior venda:")
+print(vendas.max())
+
+#   NumPy faz cálculo matemático real.
+
+
+

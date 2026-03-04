@@ -1,0 +1,94 @@
+#Exercicio 9 - Criar um dataFrame
+import pandas as pd
+
+print('Criar um DataFrame')
+df = pd.DataFrame( {
+    'Produtos': ['Notebook','Mouse','Monitor', 'Teclado' , 'Webcam' ],
+    'Valor': [3500, 90, 1200, 250, 300]
+}
+                   )
+
+print(df)
+
+print('\nProdutos com valor acima de 500')
+_500 = df[df['Valor']>500]
+print(_500)
+
+#Exercicio 10 - Estatisticas
+print('\nValor total')
+print(f'R${sum(df['Valor'])}')
+print('\nMédia')
+print(df['Valor'].mean())
+print('\nMaior valor')
+print(f'R${max(df['Valor'])}')
+print('\nMenor valor')
+print(f'R${min(df['Valor'])}')
+
+#Exercicio 11 - Nova coluna
+def clasificar(preco):
+  if preco >= 2000:
+    return 'Premium'
+  elif preco > 500:
+    return 'Intermediario'
+  else:
+    return 'Basico'
+
+df['Categoria'] = df['Valor'].apply(clasificar)
+
+print('\nNovo DataFrame')
+print(df)
+
+#exercicio 12 - ordenação
+print('\nOrdem Crescente')
+print(df.sort_values(by='Valor', ascending=True))
+
+print('\nOrdem Decrescente')
+print(df.sort_values(by='Valor', ascending=False))
+
+#exercicio 13 - Filtro + copia
+
+nv_df = df[['Produtos','Valor']].copy()
+print('\nDataFrame copiado')
+print(nv_df)
+
+df_3 = nv_df[nv_df['Valor']>=2000]
+
+print('\nOrdem Decrescente')
+print(df_3.sort_values(by='Valor',ascending=False))
+
+
+df = pd.DataFrame( {
+    'Produtos': ['Sensores', 'Placas de circuito', 'Componentes eletronicos' ,'Ferro de Solda'],
+    'Valor': [300, 1600, 2000, 1550]#Valores aleatorios
+}
+                  )
+
+#exercicio 16
+import pandas as pd
+
+
+df = pd.DataFrame( {
+    'Produtos': ['Sensores', 'Placas de circuito', 'Componentes eletronicos' ,'Ferro de Solda'],
+    'Valor': [300, 1600, 2000, 1550]#Valores aleatorios
+}
+                  )
+#exercicio 16 
+print('DataFrame')
+print(df)
+
+
+df['Imposto'] = 0.08
+
+print('\nDataFrame com a coluna de imposto')
+print(df)
+
+imposto = 1.08
+df['Preço Final'] = df['Valor'] * imposto
+
+print('\nColuna com Preço final')
+print(df)
+
+print('\n')
+print('Filtrar DataFrame')
+print(df[df['Preço Final']>1500])
+

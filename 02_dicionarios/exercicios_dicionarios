@@ -1,0 +1,99 @@
+# ========================================
+# Exercícios - Manipulação de dicionarios 
+# Autor: Thiago Almeida Souza
+# ========================================
+# ========================================
+"""
+Objetivo:
+Praticar manipulação de dicionários:
+- Criação de dicionários
+- keys(), values(), items()
+- Estrutura de repetição com for
+- Condicionais
+- update()
+- copy()
+- input() para interação com usuário
+- sum() aplicado em values() - sum(dados.values())
+"""
+# ========================================
+#EXERCICIO 1 -  Criar e explorar dicionario
+print('Criar um dicionario de produtos: ')
+produtos = {
+    'Notebook': 3500,
+    'Mouse': 90,
+    'Monitor': 1200,
+    'Teclado': 250,
+    'Webcam': 300
+}
+#Dicionario Original 
+print(produtos)
+
+print('\nApenas as chaves:  ')
+print(produtos.keys())
+
+print('\nApenas os valores: ')
+print(produtos.values())
+
+print('\\nChave e valores') #utiliza items() para mostrar as chaves e os valores (Chave, valor).
+print(produtos.items())
+
+print("=" * 50)
+
+#===========================================================
+#EXERCICIO 2 -  Separar os produtos entre caros e baratos 
+print('\nSeparar por faixa de preço: ')
+produtos_caro ={}
+
+produtos_barato = {}
+
+for produto, preco in produtos.items():
+  if preco > 1000:
+    produtos_caro[produto] = preco #ou .update({Produto: preco}) - adiciona no dicionario , porem mais comum quando vai atulizar varios valores ou juntar dicionarios
+  else:
+    produtos_barato.update({produto: preco}) #dicionario[chave] = valor - formato mais rapido e facil de enteder 
+
+print('\nProutos acima de 1000: ')
+print(produtos_caro)
+
+print('\nProduto igual ou abaixo que 1000:')
+print(produtos_barato)
+print("=" * 50)
+
+#===========================================================
+#EXERCICIO 7 - Aplicar 15% de desconto
+print("\nAplicando 15% de desconto em produtos acima de 1000")
+
+produtos_2 = produtos.copy() #fazendo a copia evitamos qualquer mudança no dicionario original 
+
+for produtos, Preco in produtos_2.items():
+  if Preco > 1000:
+    produtos_2[produtos] = Preco * 0.85 # adicionando da mesma forma do exercicio anterior 
+
+
+print('\nDesconto aplicado')
+print(produtos_2)
+
+#===========================================================
+#EXERCICIO 8 - Criar um pedido interativo 
+print('\nCriar pedido do cliente: ')
+
+pedido_cliente = {}
+resposta = 'continuar'
+
+#while pois caso a resposta do cliente seja continuar adicionando seus produtos
+# se digitar 'sair' ele irá visualizar seu pedido 
+
+while resposta.lower() == 'continuar': #evita que a respota seja maiuscula 
+  produto_name = input('Digite o nome do produto: ')
+  produto_price = float(input('Digite o valor do produto:R$ '))
+  pedido_cliente[produto_name] = produto_price # ou.update({produto_name: produto_price})
+
+  resposta = input("\nDigite 'continuar' para adicionar mais ou 'sair' para finalizar: ")
+
+print('\nLista de produto do cliente ')
+
+for produto,preco in pedido_cliente.items():
+  print(f'Produto: {produto}, Preço: R$ {preco }')
+
+print('\nToTal do pedido: ')
+print(f'O valor total do seu pedidio é: R${sum(pedido_cliente.values())}') 
